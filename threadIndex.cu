@@ -3,7 +3,7 @@
 __global__ void showCpy(float* d_a, int const nx, int const ny){
     unsigned int i = threadIdx.x;
     if(i<nx*ny) 
-        printf("%5.2f ", d_a[i]); 
+        printf("%d, %5.2f \n", i, d_a[i]); 
 }
 
 int main(){

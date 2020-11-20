@@ -21,9 +21,8 @@ __global__ void sumMatrix2D2D(float* d_a, float* d_b, float* d_c, int const nx, 
 __global__ void sumMatrix1D1D(float* d_a, float* d_b, float* d_c, int const nx, int const ny){
 
     int i = blockIdx.x;
-    int j = threadIdx.x; 
-
     for (; i < nx; i += gridDim.x){
+        int j = threadIdx.x; 
         for (; j < ny; j += blockDim.x){
             int mp = i*ny + j;
             d_c[mp] = d_a[mp] + d_b[mp];

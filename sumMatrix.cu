@@ -20,8 +20,8 @@ __global__ void sumMatrix2D2D(float* d_a, float* d_b, float* d_c, int const nx, 
 
 __global__ void sumMatrix1D1D(float* d_a, float* d_b, float* d_c, int const nx, int const ny){
 
-    int i = threadIdx.x;
-    int j = blockIdx.x; 
+    int i = blockIdx.x;
+    int j = threadIdx.x; 
 
     for (; i < nx; i += gridDim.x){
         for (; j < ny; j += blockDim.x){
@@ -56,7 +56,7 @@ int main(){
     cudaMemcpy(d_b, h_b, mSize, cudaMemcpyHostToDevice);
 
     int xBlock = 32;
-    int yBlock = 32;
+    int yBlock = 16;
     dim3 block(xBlock, yBlock);
     dim3 grid(nx/xBlock, ny/yBlock);
 

@@ -30,7 +30,7 @@ __global__ void sumMatrix1D1D(float* d_a, float* d_b, float* d_c, int const nx, 
     }
 };
 
-int main(){
+int main(int argc, char **argv){
     int const nx = 1<<14;
     int const ny = 1<<14;
     size_t mSize = nx*ny*sizeof(float);
@@ -56,8 +56,12 @@ int main(){
 
     int xBlock = 32;
     int yBlock = 16;
+    if(argc > 1) xBlock = atoi(argv[0]);
+    if(argc > 2) xBlock = atoi(argv[1]);
     dim3 block(xBlock, yBlock);
     dim3 grid(nx/xBlock, ny/yBlock);
+
+    printf("run with block %d, %d", xBlock, yBlock);
 
     sumMatrix2D2D<<<grid, block>>>(d_a, d_b, d_c, nx, ny);
     cudaMemcpy(h_c, d_c, mSize, cudaMemcpyDeviceToHost);

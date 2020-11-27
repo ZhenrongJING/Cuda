@@ -13,7 +13,7 @@ __global__ void sumMatrix2D2D(float* d_a, float* d_b, float* d_c, int const nx, 
 
     int i = blockIdx.x*blockDim.x + threadIdx.x;
     int j = blockIdx.y*blockDim.y + threadIdx.y;
-    int mp = i*ny+j;
+    int mp = j*ny+i;
     
     d_c[mp] = d_a[mp] + d_b[mp];
 };
@@ -56,8 +56,8 @@ int main(int argc, char **argv){
 
     int xBlock = 32;
     int yBlock = 16;
-    if(argc > 1) xBlock = atoi(argv[0]);
-    if(argc > 2) xBlock = atoi(argv[1]);
+    if(argc > 1) xBlock = atoi(argv[1]);
+    if(argc > 2) xBlock = atoi(argv[2]);
     dim3 block(xBlock, yBlock);
     dim3 grid(nx/xBlock, ny/yBlock);
 

@@ -57,7 +57,7 @@ int main(int argc, char **argv){
     int xBlock = 32;
     int yBlock = 16;
     if(argc > 1) xBlock = atoi(argv[1]);
-    if(argc > 2) xBlock = atoi(argv[2]);
+    if(argc > 2) yBlock = atoi(argv[2]);
     dim3 block(xBlock, yBlock);
     dim3 grid(nx/xBlock, ny/yBlock);
 

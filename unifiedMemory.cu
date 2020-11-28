@@ -15,12 +15,12 @@ int main() {
     cudaMallocManaged((void**)&e, sizeof(dataElem) );
     e->val = 10;
 
-    cudaMallocManaged((void**)&(e->name), sizeof(char)*(strlen("hello")+1), 0);
+    cudaMallocManaged((void**)&(e->name), sizeof(char)*(strlen("hello")+1) );
     strcpy(e->name, "hello");
 
-    kernal<<<1,1>>>(e);
-    cudaDeviceSynchronize();
-
     printf("From the host %s\n", e->name);
+
+//    kernal<<<1,1>>>(e);
+//    cudaDeviceSynchronize();
     return 0;
 }

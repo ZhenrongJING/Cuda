@@ -19,6 +19,7 @@ int main() {
     strcpy(e->name, "hello");
 
     kernal<<<1,1>>>(e);
+    cudaDeviceSynchronize();
 
     printf("From the host %s\n", e->name);
     return 0;

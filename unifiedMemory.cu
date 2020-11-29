@@ -20,7 +20,8 @@ int main() {
 
     printf("From the host %s\n", e->name);
 
-//    kernal<<<1,1>>>(e);
-//    cudaDeviceSynchronize();
+    kernal<<<1,1>>>(e);
+    cudaDeviceSynchronize();
+
     return 0;
 }

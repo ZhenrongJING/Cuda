@@ -1,3 +1,13 @@
+#include <iostream>
+using std::cerr;
+using std::endl;
+
+// Error handling macro
+#define CUDA_CHECK(call) \
+    if((call) != cudaSuccess) { \
+        cudaError_t err = cudaGetLastError(); \
+        cerr << "CUDA error calling \""#call"\", code is " << err << endl;}
+
 #include<stdio.h>
 
 struct dataElem {
@@ -12,7 +22,7 @@ __global__ void kernal(dataElem* e){
 int main() {
 
     dataElem* e;
-    cudaMallocManaged((void**)&e, sizeof(dataElem) );
+    CUDA_CHECK(cudaMallocManaged((void**)&e, sizeof(dataElem)));
     e->val = 10;
 
     cudaMallocManaged((void**)&(e->name), sizeof(char)*(strlen("hello")+1) );
@@ -20,8 +30,8 @@ int main() {
 
     printf("From the host %s\n", e->name);
 
-    kernal<<<1,1>>>(e);
-    cudaDeviceSynchronize();
+//    kernal<<<1,1>>>(e);
+//    cudaDeviceSynchronize();
 
     return 0;
 }

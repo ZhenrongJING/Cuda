@@ -1,6 +1,14 @@
+#include<iostream>
 #include<cstdlib>
 #include<stdio.h>
 #include"help.h"
+using std::cerr;
+using std::endl;
+
+#define CUDA_CHECK(call) \
+    if((call) != cudaSuccess) { \
+        cudaError_t err = cudaGetLastError(); \
+        cerr << "CUDA error calling \""#call"\", code is " << err << endl;}
 
 void initialize(float* mtx, int const nx, int const ny){
     int tmp = nx*ny;
@@ -23,11 +31,11 @@ void computeGPU(float* h_a, float* h_b, float* h_c, int const mSize, int const n
     float* d_a;
     float* d_b;
     float* d_c;
-    cudaMalloc((void**)&d_a, mSize);
-    cudaMalloc((void**)&d_b, mSize);
-    cudaMalloc((void**)&d_c, mSize);
-    cudaMemcpy(d_a, h_a, mSize, cudaMemcpyHostToDevice);
-    cudaMemcpy(d_b, h_b, mSize, cudaMemcpyHostToDevice);
+    CUDA_CHECK (cudaMalloc((void**)&d_a, mSize));
+    CUDA_CHECK (cudaMalloc((void**)&d_b, mSize));
+    CUDA_CHECK (cudaMalloc((void**)&d_c, mSize));
+    CUDA_CHECK (cudaMemcpy(d_a, h_a, mSize, cudaMemcpyHostToDevice));
+    CUDA_CHECK (cudaMemcpy(d_b, h_b, mSize, cudaMemcpyHostToDevice));
 
     int xBlock = 32;
     int yBlock = 32;
@@ -38,7 +46,7 @@ void computeGPU(float* h_a, float* h_b, float* h_c, int const mSize, int const n
     printf("run with block %d, %d", xBlock, yBlock);
 
     sumMatrix2D2D<<<grid, block>>>(d_a, d_b, d_c, nx, ny);
-    cudaMemcpy(h_c, d_c, mSize, cudaMemcpyDeviceToHost);
+    CUDA_CHECK (cudaMemcpy(h_c, d_c, mSize, cudaMemcpyDeviceToHost));
 
     for (int i=0; i<nx*ny; i++){
         if ( abs(h_c[i] - (h_a[i] + h_b[i])) > 1e-4 ) {

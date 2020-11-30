@@ -13,8 +13,8 @@ int main(int argc, char **argv){
 
     printf("processor %d, there are %d in total \n", rank, n_proc);
 
-    int const nx = 1<<8;
-    int const ny = 1<<8;
+    int const nx = 1<<15;
+    int const ny = 1<<15;
     size_t mSize = nx*ny*sizeof(float);
 
     float* h_a;

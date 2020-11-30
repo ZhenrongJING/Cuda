@@ -43,10 +43,18 @@ void computeGPU(float* h_a, float* h_b, float* h_c, int const mSize, int const n
     dim3 block(xBlock, yBlock);
     dim3 grid(nx/xBlock, ny/yBlock);
 
-    printf("run with block %d, %d", xBlock, yBlock);
+    printf("run with block %d, %d \n", xBlock, yBlock);
 
-    sumMatrix2D2D<<<grid, block>>>(d_a, d_b, d_c, nx, ny);
+    for (int i=0; i<100; i++) {
+        sumMatrix2D2D<<<grid, block>>>(d_a, d_b, d_c, nx, ny);
+        printf("finished\n");
+    }
+    
+    cudaError_t err = cudaGetLastError();
+    if (err != cudaSuccess) 
+        printf("Error: %s\n", cudaGetErrorString(err));
     CUDA_CHECK (cudaMemcpy(h_c, d_c, mSize, cudaMemcpyDeviceToHost));
+
 
     for (int i=0; i<nx*ny; i++){
         if ( abs(h_c[i] - (h_a[i] + h_b[i])) > 1e-4 ) {

@@ -1,22 +1,30 @@
 #include<stdio.h>
 
-__global__ void kernel(){
+__global__ void kernel(int i){
 
-    printf("hello world");
+    printf("hello world %d \n", i);
 };
 
 int main(){
 
-    cudaStream_t stream;
-    cudaStreamCreate(&stream);
+    int const n_stream = 5;
+    cudaStream_t *ls_stream;
+    ls_stream = (cudaStream_t*) new cudaStream_t[n_stream];
 
-    for(int i=0; i<5; i++){
-        kernel<<<1, 1>>>();
+    for (int i=0; i<n_stream; i++){
+        cudaStreamCreate(&ls_stream[i]);
     }
 
-    cudaStreamDestroy(stream);
+
+    for(int i=0; i<n_stream; i++){
+        kernel<<<1, 1, 0, ls_stream[i]>>>(i);
+    }
 
     cudaDeviceSynchronize();
+
+    for(int i=0; i<n_stream; i++){
+        cudaStreamDestroy(ls_stream[i]);
+    }
 
     return 0;
 }

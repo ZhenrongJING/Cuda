@@ -89,11 +89,18 @@ int main(int argc, char** argv )
     test = new float[nElem];
     cudaMemcpy(test, d_imgPad, nElem*sizeof(float), cudaMemcpyDeviceToHost);
 
-    for (int i=0; i<nElem; i++)
-        if ( abs( test[i] - h_imgPad[i]) > 0.0001 ) {
-            cout << i << " wrong" << endl;
-            break;
-        };
+    for (int c=0; c<nchl; c++){
+        for (int i=0; i<rowP; i++){
+            for (int j=0; j<colP; j++){
+                int np = idx(nchl, rowP, colP, c, i, j);
+                if ( abs( test[np] - h_imgPad[np]) > 0.0001 ) {
+                    cout << c << ' ' << i << ' ' << j  << " wrong" << endl;
+                    break;
+                };
+            }
+        }
+    }
+
 
 /*
 

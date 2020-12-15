@@ -151,7 +151,7 @@ int main(int argc, char** argv )
         for (int i=0; i<rowR; i++){
             for (int j=0; j<colR; j++){
                 int np = idx(nFilter, nchl, rowR, colR, n, c, i, j);
-                if ( abs(test[np] - imageR[np]) > 0.0001f ) {
+                if ( abs(test[np] - imageR[np]) > 0.001 ) {
                     cout << n << ' ' << c << ' ' << i << ' ' << j << ' ' << test[np] << ' ' << imageR[np] << endl;
                     exit(0);
                 };

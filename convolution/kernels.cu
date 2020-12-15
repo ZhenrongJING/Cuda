@@ -25,16 +25,18 @@ __global__ void convl(int const nFilter, int const nchl, int const rowP, int con
     int j = blockIdx.y*blockDim.y+threadIdx.y;
 
     if (i<colP-colF && j<rowP-colF){
+        for (int n=0; n<nFilter; n++){
         for (int c=0; c<nchl; c++){
             int idxR = idxD(nchl, rowP-rowF, colP-colF, c, j, i); 
             imgR[idxR] = 0.0f;
             for (int jj=0; jj<rowF; jj++){
                 for (int ii=0; ii<colF; ii++){
-                    int idxF = idxD4(nFilter, nchl, rowF, colF, 0, c, jj, ii);
+                    int idxF = idxD4(nFilter, nchl, rowF, colF, n, c, jj, ii);
                     int idxP = idxD(nchl, rowP, colP, c, j+jj, i+ii);
                     imgR[idxR] += imgPad[idxP]*filter[idxF]; 
                 }
             } 
+        }
         }
     }
 }

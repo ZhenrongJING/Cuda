@@ -9,10 +9,10 @@ __global__ void padding(int const nchl, int const nrow, int const ncol,int const
     for (int n=0; n<nchl; n++){
         int idxP = idxD(nchl, rowP, colP, n, j, i);
         if ( (i>npad && i<ncol+npad) && (j>npad && j<nrow+npad) ) {
-            imgPad[idxP] = 0.f;
-        } else {
             int idxI = idxD(nchl, nrow, ncol, n, j-npad, i-npad);
             imgPad[idxP] = img[idxI];
+        } else {
+            imgPad[idxP] = 0.f;
         }
     }
 }

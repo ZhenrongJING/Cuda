@@ -94,7 +94,7 @@ int main(int argc, char** argv )
             for (int j=0; j<colP; j++){
                 int np = idx(nchl, rowP, colP, c, i, j);
                 if ( abs( test[np] - h_imgPad[np]) > 0.0001f ) {
-                    cout << c << ' ' << i << ' ' << j  << test[np] << ' ' << h_imgPad[np] << endl;
+                    cout << c << ' ' << i << ' ' << j  << ' ' << test[np] << ' ' << h_imgPad[np] << endl;
                     exit(0);
                 };
             }

@@ -6,7 +6,7 @@ __global__ void padding(int const nchl, int const nrow, int const ncol,int const
     int const rowP = nrow + 2*npad;
     int const colP = ncol + 2*npad;
 
-    if ( (i<ncol+2*npad) && (i<ncol+2*npad) ){
+    if ( (i<ncol+2*npad) && (j<nrow+2*npad) ){
     for (int n=0; n<nchl; n++){
         int idxP = idxD(nchl, rowP, colP, n, j, i);
         if ( (i>npad-1 && i<ncol+npad) && (j>npad-1 && j<nrow+npad) ) {

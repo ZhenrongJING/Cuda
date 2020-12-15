@@ -1,15 +1,15 @@
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
-  "CXX"
+  "CUDA"
   )
 # The set of files for implicit dependencies of each language:
-set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/zjing/Documents/cuda/convolution/convolution.cpp" "/home/zjing/Documents/cuda/convolution/build/CMakeFiles/conv.dir/convolution.cpp.o"
+set(CMAKE_DEPENDS_CHECK_CUDA
+  "/home/zjing/Documents/cuda/convolution/convolution.cu" "/home/zjing/Documents/cuda/convolution/build/CMakeFiles/conv.dir/convolution.cu.o"
   )
-set(CMAKE_CXX_COMPILER_ID "GNU")
+set(CMAKE_CUDA_COMPILER_ID "NVIDIA")
 
 # The include file search paths:
-set(CMAKE_CXX_TARGET_INCLUDE_PATH
+set(CMAKE_CUDA_TARGET_INCLUDE_PATH
   "/usr/local/include/opencv4"
   )
 

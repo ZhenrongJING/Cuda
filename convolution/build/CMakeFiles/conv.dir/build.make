@@ -57,38 +57,71 @@ include CMakeFiles/conv.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/conv.dir/flags.make
 
-CMakeFiles/conv.dir/convolution.cpp.o: CMakeFiles/conv.dir/flags.make
-CMakeFiles/conv.dir/convolution.cpp.o: ../convolution.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/zjing/Documents/cuda/convolution/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/conv.dir/convolution.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/conv.dir/convolution.cpp.o -c /home/zjing/Documents/cuda/convolution/convolution.cpp
+CMakeFiles/conv.dir/convolution.cu.o: CMakeFiles/conv.dir/flags.make
+CMakeFiles/conv.dir/convolution.cu.o: ../convolution.cu
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/zjing/Documents/cuda/convolution/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CUDA object CMakeFiles/conv.dir/convolution.cu.o"
+	/usr/local/cuda-10.0/bin/nvcc  $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -x cu -c /home/zjing/Documents/cuda/convolution/convolution.cu -o CMakeFiles/conv.dir/convolution.cu.o
 
-CMakeFiles/conv.dir/convolution.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/conv.dir/convolution.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/zjing/Documents/cuda/convolution/convolution.cpp > CMakeFiles/conv.dir/convolution.cpp.i
+CMakeFiles/conv.dir/convolution.cu.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CUDA source to CMakeFiles/conv.dir/convolution.cu.i"
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_PREPROCESSED_SOURCE
 
-CMakeFiles/conv.dir/convolution.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/conv.dir/convolution.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/zjing/Documents/cuda/convolution/convolution.cpp -o CMakeFiles/conv.dir/convolution.cpp.s
+CMakeFiles/conv.dir/convolution.cu.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CUDA source to assembly CMakeFiles/conv.dir/convolution.cu.s"
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_ASSEMBLY_SOURCE
 
-CMakeFiles/conv.dir/convolution.cpp.o.requires:
+CMakeFiles/conv.dir/convolution.cu.o.requires:
 
-.PHONY : CMakeFiles/conv.dir/convolution.cpp.o.requires
+.PHONY : CMakeFiles/conv.dir/convolution.cu.o.requires
 
-CMakeFiles/conv.dir/convolution.cpp.o.provides: CMakeFiles/conv.dir/convolution.cpp.o.requires
-	$(MAKE) -f CMakeFiles/conv.dir/build.make CMakeFiles/conv.dir/convolution.cpp.o.provides.build
-.PHONY : CMakeFiles/conv.dir/convolution.cpp.o.provides
+CMakeFiles/conv.dir/convolution.cu.o.provides: CMakeFiles/conv.dir/convolution.cu.o.requires
+	$(MAKE) -f CMakeFiles/conv.dir/build.make CMakeFiles/conv.dir/convolution.cu.o.provides.build
+.PHONY : CMakeFiles/conv.dir/convolution.cu.o.provides
 
-CMakeFiles/conv.dir/convolution.cpp.o.provides.build: CMakeFiles/conv.dir/convolution.cpp.o
+CMakeFiles/conv.dir/convolution.cu.o.provides.build: CMakeFiles/conv.dir/convolution.cu.o
 
 
 # Object files for target conv
 conv_OBJECTS = \
-"CMakeFiles/conv.dir/convolution.cpp.o"
+"CMakeFiles/conv.dir/convolution.cu.o"
 
 # External object files for target conv
 conv_EXTERNAL_OBJECTS =
 
-conv: CMakeFiles/conv.dir/convolution.cpp.o
+CMakeFiles/conv.dir/cmake_device_link.o: CMakeFiles/conv.dir/convolution.cu.o
+CMakeFiles/conv.dir/cmake_device_link.o: CMakeFiles/conv.dir/build.make
+CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_gapi.so.4.5.1
+CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_highgui.so.4.5.1
+CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_ml.so.4.5.1
+CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_objdetect.so.4.5.1
+CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_photo.so.4.5.1
+CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_stitching.so.4.5.1
+CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_video.so.4.5.1
+CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_videoio.so.4.5.1
+CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_dnn.so.4.5.1
+CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_imgcodecs.so.4.5.1
+CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_calib3d.so.4.5.1
+CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_features2d.so.4.5.1
+CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_flann.so.4.5.1
+CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_imgproc.so.4.5.1
+CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_core.so.4.5.1
+CMakeFiles/conv.dir/cmake_device_link.o: CMakeFiles/conv.dir/dlink.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/zjing/Documents/cuda/convolution/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CUDA device code CMakeFiles/conv.dir/cmake_device_link.o"
+	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/conv.dir/dlink.txt --verbose=$(VERBOSE)
+
+# Rule to build all files generated by this target.
+CMakeFiles/conv.dir/build: CMakeFiles/conv.dir/cmake_device_link.o
+
+.PHONY : CMakeFiles/conv.dir/build
+
+# Object files for target conv
+conv_OBJECTS = \
+"CMakeFiles/conv.dir/convolution.cu.o"
+
+# External object files for target conv
+conv_EXTERNAL_OBJECTS =
+
+conv: CMakeFiles/conv.dir/convolution.cu.o
 conv: CMakeFiles/conv.dir/build.make
 conv: /usr/local/lib/libopencv_gapi.so.4.5.1
 conv: /usr/local/lib/libopencv_highgui.so.4.5.1
@@ -105,8 +138,9 @@ conv: /usr/local/lib/libopencv_features2d.so.4.5.1
 conv: /usr/local/lib/libopencv_flann.so.4.5.1
 conv: /usr/local/lib/libopencv_imgproc.so.4.5.1
 conv: /usr/local/lib/libopencv_core.so.4.5.1
+conv: CMakeFiles/conv.dir/cmake_device_link.o
 conv: CMakeFiles/conv.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/zjing/Documents/cuda/convolution/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable conv"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/zjing/Documents/cuda/convolution/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CUDA executable conv"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/conv.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -114,7 +148,7 @@ CMakeFiles/conv.dir/build: conv
 
 .PHONY : CMakeFiles/conv.dir/build
 
-CMakeFiles/conv.dir/requires: CMakeFiles/conv.dir/convolution.cpp.o.requires
+CMakeFiles/conv.dir/requires: CMakeFiles/conv.dir/convolution.cu.o.requires
 
 .PHONY : CMakeFiles/conv.dir/requires
 

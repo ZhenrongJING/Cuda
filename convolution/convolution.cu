@@ -151,8 +151,8 @@ int main(int argc, char** argv )
         for (int i=0; i<rowR; i++){
             for (int j=0; j<colR; j++){
                 int np = idx(nFilter, nchl, rowR, colR, n, c, i, j);
-                if ( abs(test[np] - d_imgR[np]) > 0.0001f ) {
-                    cout << n << ' ' << c << ' ' << i << ' ' << j << ' ' << test[np] << ' ' << h_imgPad[np] << endl;
+                if ( abs(test[np] - imageR[np]) > 0.0001f ) {
+                    cout << n << ' ' << c << ' ' << i << ' ' << j << ' ' << test[np] << ' ' << imageR[np] << endl;
                     exit(0);
                 };
             }

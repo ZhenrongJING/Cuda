@@ -26,16 +26,15 @@ __global__ void convl(int const nFilter, int const nchl, int const rowP, int con
 
     if (i<colP-colF && j<rowP-colF){
         for (int c=0; c<nchl; c++){
-            int idxR = idxD(nchl, rowP-rowF, colP-colF, c, i, j); 
+            int idxR = idxD(nchl, rowP-rowF, colP-colF, c, j, i); 
             imgR[idxR] = 0.0f;
-            for (int ii=0; ii<rowF; ii++){
-                for (int jj=0; jj<colF; jj++){
-                    int idxF = idxD4(nFilter, nchl, rowF, colF, 0, c, ii, jj);
-                    int idxP = idxD(nchl, rowP, colP, c, i+ii, j+jj);
+            for (int jj=0; jj<rowF; jj++){
+                for (int ii=0; ii<colF; ii++){
+                    int idxF = idxD4(nFilter, nchl, rowF, colF, 0, c, jj, ii);
+                    int idxP = idxD(nchl, rowP, colP, c, j+jj, i+ii);
                     imgR[idxR] += imgPad[idxP]*filter[idxF]; 
                 }
             } 
         }
     }
-
 }

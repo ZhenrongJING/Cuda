@@ -85,26 +85,6 @@ int main(int argc, char** argv )
     dim3 grid(gridX, gridY);
     padding<<<block,grid>>>(nchl, nrow, ncol, npad, d_img, d_imgPad);
 
-    float* test;
-    nElem = nchl*rowP*colP;
-    test = new float[nElem];
-    cudaMemcpy(test, d_imgPad, nElem*sizeof(float), cudaMemcpyDeviceToHost);
-
-    for (int c=0; c<nchl; c++){
-        for (int i=0; i<rowP; i++){
-            for (int j=0; j<colP; j++){
-                int np = idx(nchl, rowP, colP, c, i, j);
-                if ( abs( test[np] - h_imgPad[np]) > 0.0001f ) {
-                    cout << c << ' ' << i << ' ' << j  << ' ' << test[np] << ' ' << h_imgPad[np] << endl;
-                    exit(0);
-                };
-            }
-        }
-    }
-
-
-/*
-
     int const colF=2*npad, rowF=2*npad, nFilter=2;
     nElem = nFilter*nchl*rowF*colF;
     float *h_filter;
@@ -122,19 +102,13 @@ int main(int argc, char** argv )
         }
     }
 
-    int const rowR= nrow+2*npad-rowF; 
-    int const colR= ncol+2*npad-colF; 
-    nElem = nFilter*nchl*rowR*colR;
-    float* imageR;
-    imageR = new float[nElem];
-
-
-
     float* d_filter;
     nElem = nFilter*nchl*rowF*colF;
     cudaMalloc((void**)&d_filter, nElem*sizeof(float));
     cudaMemcpy(d_filter, h_filter, nElem*sizeof(float), cudaMemcpyHostToDevice);
 
+    int const rowR= nrow+2*npad-rowF; 
+    int const colR= ncol+2*npad-colF; 
     float* d_imgR;
     nElem = nFilter*nchl*rowR*colR;
     cudaMalloc((void**)&d_imgR, nElem*sizeof(float));
@@ -142,8 +116,11 @@ int main(int argc, char** argv )
     gridX = colR/32 + 1;
     gridY = rowR/32 + 1;
     dim3 grid1(gridX,gridY);
-
     convl<<<block, grid1>>>(nFilter, nchl, rowP, colP, rowF, colF, d_imgPad, d_imgR, d_filter);
+
+    nElem = nFilter*nchl*rowR*colR;
+    float* imageR;
+    imageR = new float[nElem];
 
     for (int n=0; n<nFilter; n++){
         for(int c=0; c<nchl; c++){
@@ -164,6 +141,25 @@ int main(int argc, char** argv )
         }
     }
 
+    float* test;
+    nElem = nFilter*nchl*rowR*colR;
+    test = new float[nElem];
+    cudaMemcpy(test, d_imgR, nElem*sizeof(float), cudaMemcpyDeviceToHost);
+
+    for (int n=0; n<nFilter; n++){
+    for (int c=0; c<nchl; c++){
+        for (int i=0; i<rowR; i++){
+            for (int j=0; j<colR; j++){
+                int np = idx(nFilter, nchl, rowR, colR, n, c, i, j);
+                if ( abs(test[np] - d_imgR[np]) > 0.0001f ) {
+                    cout << n << ' ' << c << ' ' << i << ' ' << j << ' ' << test[np] << ' ' << h_imgPad[np] << endl;
+                    exit(0);
+                };
+            }
+        }
+    }
+    }
+/*
     for (int c=0; c<nchl; c++){
         for (int i=0; i<nrow; i++){
             for (int j=0; j<ncol; j++){

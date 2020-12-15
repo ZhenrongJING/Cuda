@@ -8,7 +8,7 @@ __global__ void padding(int const nchl, int const nrow, int const ncol,int const
 
     for (int n=0; n<nchl; n++){
         int idxP = idxD(nchl, rowP, colP, n, j, i);
-        if ( (i>npad && i<ncol+npad) && (j>npad && j<nrow+npad) ) {
+        if ( (i>npad-1 && i<ncol+npad) && (j>npad-1 && j<nrow+npad) ) {
             int idxI = idxD(nchl, nrow, ncol, n, j-npad, i-npad);
             imgPad[idxP] = img[idxI];
         } else {

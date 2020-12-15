@@ -20,7 +20,7 @@ int main(int argc, char** argv )
     Mat image;
     image = imread( argv[1], 1 );
     Mat imageFloat;
-    image.convertTo(imageFloat, CV_32FC3, 1.0f/255.0f);
+    image.convertTo(imageFloat, CV_32FC3, 1.0/255.0);
 
     if ( !image.data )
     {

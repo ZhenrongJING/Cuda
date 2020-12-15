@@ -54,6 +54,7 @@ int main(int argc, char** argv )
     nElem = nchl*nrow*ncol;
     cudaMalloc((void**)&d_img, nElem*sizeof(float));
     cudaMemcpy(d_img, h_img, nElem*sizeof(float), cudaMemcpyHostToDevice);
+    cout << h_img[0] << endl;
 
     int const npad = 16;
     int const rowP= nrow+2*npad; 

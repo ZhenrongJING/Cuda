@@ -127,7 +127,7 @@ int main(int argc, char** argv )
             for (int i=0; i<rowR; i++){
                 for (int j=0; j<colR; j++){
 
-                    imageR[idx(nFilter,nchl,rowR,colR,n,c,i,j)] = 0.0f;
+                    imageR[idx(nFilter,nchl,rowR,colR,n,c,i,j)] = 0.0;
                     for(int ii=0; ii<rowF; ii++){
                         for(int jj=0; jj<colF; jj++){
                             imageR[idx(nFilter,nchl,rowR,colR,n,c,i,j)] +=
@@ -151,7 +151,7 @@ int main(int argc, char** argv )
         for (int i=0; i<rowR; i++){
             for (int j=0; j<colR; j++){
                 int np = idx(nFilter, nchl, rowR, colR, n, c, i, j);
-                if ( abs(test[np] - imageR[np]) > 0.001f ) {
+                if ( abs(test[np] - imageR[np]) > 0.0001f ) {
                     cout << n << ' ' << c << ' ' << i << ' ' << j << ' ' << test[np] << ' ' << imageR[np] << endl;
                     exit(0);
                 };

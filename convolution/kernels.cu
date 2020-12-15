@@ -27,7 +27,7 @@ __global__ void convl(int const nFilter, int const nchl, int const rowP, int con
     if (i<colP-colF && j<rowP-colF){
         for (int n=0; n<nFilter; n++){
         for (int c=0; c<nchl; c++){
-            int idxR = idxD4(nchl, rowP-rowF, colP-colF, n, c, j, i); 
+            int idxR = idxD4(nFilter, nchl, rowP-rowF, colP-colF, n, c, j, i); 
             imgR[idxR] = 0.0f;
             for (int jj=0; jj<rowF; jj++){
                 for (int ii=0; ii<colF; ii++){

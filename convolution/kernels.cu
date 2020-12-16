@@ -35,6 +35,7 @@ __global__ void convl(int const nFilter, int const nchl, int const rowP, int con
                     tmpFilter[jj*colF+ii] = filter[idxF];
                 }
             }
+
             __syncthreads();
             
             int idxR = idxD4(nFilter, nchl, rowP-rowF, colP-colF, n, c, j, i); 

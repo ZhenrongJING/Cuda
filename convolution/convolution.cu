@@ -116,7 +116,7 @@ int main(int argc, char** argv )
     gridX = colR/32 + 1;
     gridY = rowR/32 + 1;
     dim3 grid1(gridX,gridY);
-    convl<<<block, grid1>>>(nFilter, nchl, rowP, colP, rowF, colF, d_imgPad, d_imgR, d_filter);
+    convl<<<block, grid1, rowF*colF*sizeof(float)>>>(nFilter, nchl, rowP, colP, rowF, colF, d_imgPad, d_imgR, d_filter);
 
     nElem = nFilter*nchl*rowR*colR;
     float* imageR;

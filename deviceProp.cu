@@ -20,6 +20,8 @@ int main(int argc, char* argv[]){
     cout << property.warpSize << endl;
     cout << "Maximum thread" << endl;
     cout << property.maxThreadsPerMultiProcessor << endl;
+    cout << "number of MP" << endl;
+    cout << property.multiProcessorCount<< endl;
 
     return 0;
 }

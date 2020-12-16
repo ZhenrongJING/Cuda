@@ -24,7 +24,7 @@ __global__ void convl(int const nFilter, int const nchl, int const rowP, int con
     int i = blockIdx.x*blockDim.x+threadIdx.x;
     int j = blockIdx.y*blockDim.y+threadIdx.y;
 
-    __shared__ float tmpFilter[];
+    extern __shared__ float tmpFilter[];
     if (i<colP-colF && j<rowP-colF){
         for (int n=0; n<nFilter; n++){
         for (int c=0; c<nchl; c++){

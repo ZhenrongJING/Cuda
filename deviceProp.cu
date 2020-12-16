@@ -14,6 +14,7 @@ int main(int argc, char* argv[]){
     cout << property.minor << endl;
     cout << property.totalGlobalMem << endl;
     cout << property.clockRate << endl;
+    cout << "sharedMem" << endl;
     cout << property.sharedMemPerBlock << endl;
     cout << property.regsPerBlock << endl;
     cout << "warpSize" << endl;

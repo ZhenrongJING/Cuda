@@ -43,7 +43,8 @@ __global__ void convl(int const nFilter, int const nchl, int const rowP, int con
             for (int jj=0; jj<rowF; jj++){
                 for (int ii=0; ii<colF; ii++){
                     int idxP = idxD(nchl, rowP, colP, c, j+jj, i+ii);
-                    imgR[idxR] += imgPad[idxP]*tmpFilter[jj*colF+ii]; 
+                    int idxF = idxD4(nFilter, nchl, rowF, colF, n, c, jj, ii);
+                    imgR[idxR] += imgPad[idxP]*filter[idxF]; 
                 }
             } 
 

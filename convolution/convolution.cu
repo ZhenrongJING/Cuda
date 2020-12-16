@@ -56,7 +56,7 @@ int main(int argc, char** argv )
     cudaMemcpy(d_img, h_img, nElem*sizeof(float), cudaMemcpyHostToDevice);
     cout << h_img[0] << endl;
 
-    int const npad = 16;
+    int const npad = 8;
     int const rowP= nrow+2*npad; 
     int const colP= ncol+2*npad; 
 

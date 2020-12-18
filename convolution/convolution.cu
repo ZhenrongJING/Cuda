@@ -3,6 +3,9 @@
 #include <algorithm>
 #include <opencv2/opencv.hpp>
 
+#define ROW_F 17
+#define COL_F 17
+
 #include "index.hpp"
 #include "kernels.cu"
 using namespace cv;
@@ -49,75 +52,57 @@ int main(int argc, char** argv )
         }
     }
 
-    float* d_img;
     int nElem;
-    nElem = nchl*nrow*ncol;
-    cudaMalloc((void**)&d_img, nElem*sizeof(float));
-    cudaMemcpy(d_img, h_img, nElem*sizeof(float), cudaMemcpyHostToDevice);
-    cout << h_img[0] << endl;
-
-    int const npad = 16;
-    cout << "npad" << npad << endl;
-    int const rowP= nrow+2*npad; 
-    int const colP= ncol+2*npad; 
-
-    float* h_imgPad;
-    nElem = nchl*rowP*colP;
-    h_imgPad = new float[nElem];
-    for (int i=0; i<nElem; i++)
-        h_imgPad[i] = 0.f;
-
-    for (int c=0; c<nchl; c++){
-        for (int i=0; i<nrow; i++){
-            for (int j=0; j<ncol; j++){
-                h_imgPad[idx(nchl, rowP, colP, c, i+npad, j+npad)]= h_img[c*(nrow*ncol)+i*ncol+j]; 
-            }
-        }
-    }
-
-    float* d_imgPad;
-    nElem = nchl*rowP*colP;
-    cudaMalloc((void**)&d_imgPad, nElem*sizeof(float));
-    int blockX=32;
-    int blockY=32;
-    dim3 block(blockX, blockY);
-    int gridX = colP/32 + 1;
-    int gridY = rowP/32 + 1;
-    dim3 grid(gridX, gridY);
-    padding<<<block,grid>>>(nchl, nrow, ncol, npad, d_img, d_imgPad);
-
-    int const colF=2*npad, rowF=2*npad, nFilter=2;
-    nElem = nFilter*nchl*rowF*colF;
+    int const nFilter=2;
+    nElem = nFilter*nchl*ROW_F*COL_F;
     float *h_filter;
     h_filter = new float[nElem];
-    for (int i=0; i<nElem; i++)
-        h_filter[i] = 0.f;
 
     for (int n=0; n<nFilter; n++){
         for(int c=0; c<nchl; c++){
-            for (int i=0; i<rowF; i++){
-                for (int j=0; j<colF; j++){
-                    h_filter[idx(nFilter,nchl,rowF,colF,n,c,i,j)] = rand()/(RAND_MAX+0.f); 
+            for (int i=0; i<ROW_F; i++){
+                for (int j=0; j<COL_F; j++){
+                    h_filter[idx(nFilter,nchl,ROW_F,COL_F,n,c,i,j)] = rand()/(RAND_MAX+0.f); 
                 }
             } 
         }
     }
 
-    float* d_filter;
-    nElem = nFilter*nchl*rowF*colF;
-    cudaMalloc((void**)&d_filter, nElem*sizeof(float));
-    cudaMemcpy(d_filter, h_filter, nElem*sizeof(float), cudaMemcpyHostToDevice);
+    float* d_img;
+    nElem = nchl*nrow*ncol;
+    cudaMalloc((void**)&d_img, nElem*sizeof(float));
 
-    int const rowR= nrow+2*npad-rowF; 
-    int const colR= ncol+2*npad-colF; 
+    float* d_filter;
+    nElem = nFilter*nchl*ROW_F*COL_F;
+    cudaMalloc((void**)&d_filter, nElem*sizeof(float));
+
     float* d_imgR;
-    nElem = nFilter*nchl*rowR*colR;
+    nElem = nFilter*nchl*nrow*ncol;
     cudaMalloc((void**)&d_imgR, nElem*sizeof(float));
+
+    for (int n=0;n<nchl;n++){
+        int stride = n*nrow*ncol;
+        cudaMemcpy(h_img+stride, d_img+stride, (nrow*ncol)*sizeof(float), cudaMemcpyHostToDevice);
+    }
+
+    float* test;
+    nElem = nchl*nrow*ncol;
+    test = new float[nElem];
+    cudaMemcpy(test, d_img, nElem*sizeof(float), cudaMemcpyDeviceToHost);
+
+    for (int i=0; i<nElem; i++){
+        if ( abs(test[i] - h_img[i]) > 0.0001f ) {
+            cout << i << ' ' << test[i] << h_img[i] << endl;
+            exit(0);
+        }
+    }
+
+
+/*
 
     gridX = colR/32 + 1;
     gridY = rowR/32 + 1;
     dim3 grid1(gridX,gridY);
-    convl<<<block, grid1, rowF*colF*sizeof(float)>>>(nFilter, nchl, rowP, colP, rowF, colF, d_imgPad, d_imgR, d_filter);
 
     nElem = nFilter*nchl*rowR*colR;
     float* imageR;
@@ -142,10 +127,6 @@ int main(int argc, char** argv )
         }
     }
 
-    float* test;
-    nElem = nFilter*nchl*rowR*colR;
-    test = new float[nElem];
-    cudaMemcpy(test, d_imgR, nElem*sizeof(float), cudaMemcpyDeviceToHost);
 
     for (int n=0; n<nFilter; n++){
     for (int c=0; c<nchl; c++){
@@ -160,7 +141,7 @@ int main(int argc, char** argv )
         }
     }
     }
-/*
+
     for (int c=0; c<nchl; c++){
         for (int i=0; i<nrow; i++){
             for (int j=0; j<ncol; j++){

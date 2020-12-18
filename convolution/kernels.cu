@@ -1,3 +1,5 @@
+__constant__ float filter[COL_F][ROW_F];
+
 __global__ void padding(int const nchl, int const nrow, int const ncol,int const npad,
         float* img, float* imgPad){
 
@@ -19,36 +21,3 @@ __global__ void padding(int const nchl, int const nrow, int const ncol,int const
     }
 }
 
-__global__ void convl(int const nFilter, int const nchl, int const rowP, int const colP, int const rowF, int const colF, float* imgPad, float* imgR, float* filter){
-
-    int i = blockIdx.x*blockDim.x+threadIdx.x;
-    int j = blockIdx.y*blockDim.y+threadIdx.y;
-
-    extern __shared__ float tmpFilter[];
-    if (i<colP-colF && j<rowP-colF){
-        for (int n=0; n<nFilter; n++){
-        for (int c=0; c<nchl; c++){
-
-            for (int jj=threadIdx.y; jj<rowF; jj += blockDim.y){
-                for (int ii=threadIdx.x; ii<colF; ii += blockDim.x){
-                    int idxF = idxD4(nFilter, nchl, rowF, colF, n, c, jj, ii);
-                    tmpFilter[jj*colF+ii] = filter[idxF];
-                }
-            }
-
-            __syncthreads();
-            
-            int idxR = idxD4(nFilter, nchl, rowP-rowF, colP-colF, n, c, j, i); 
-            imgR[idxR] = 0.0f;
-            for (int jj=0; jj<rowF; jj++){
-                for (int ii=0; ii<colF; ii++){
-                    int idxP = idxD(nchl, rowP, colP, c, j+jj, i+ii);
-                    int idxF = idxD4(nFilter, nchl, rowF, colF, n, c, jj, ii);
-                    imgR[idxR] += imgPad[idxP]*filter[idxF]; 
-                }
-            } 
-
-        }
-        }
-    }
-}

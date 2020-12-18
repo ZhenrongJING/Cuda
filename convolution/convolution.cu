@@ -82,7 +82,7 @@ int main(int argc, char** argv )
 
     for (int n=0;n<nchl;n++){
         int stride = n*nrow*ncol;
-        cudaMemcpy(h_img+stride, d_img+stride, (nrow*ncol)*sizeof(float), cudaMemcpyHostToDevice);
+        cudaMemcpy(d_img+stride, h_img+stride, (nrow*ncol)*sizeof(float), cudaMemcpyHostToDevice);
     }
 
     float* test;
@@ -92,7 +92,7 @@ int main(int argc, char** argv )
 
     for (int i=0; i<nElem; i++){
         if ( abs(test[i] - h_img[i]) > 0.0001f ) {
-            cout << i << ' ' << test[i] << h_img[i] << endl;
+            cout << i << ' ' << test[i] << ' ' << h_img[i] << endl;
             exit(0);
         }
     }

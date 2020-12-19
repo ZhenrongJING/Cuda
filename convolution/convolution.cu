@@ -7,8 +7,14 @@
 #define COL_F 7
 #define CHN   3
 
+#define CUDA_CHECK(call) \
+    if((call) != cudaSuccess) { \
+        cudaError_t err = cudaGetLastError(); \
+        cerr << "CUDA error calling \""#call"\", code is " << err << endl;}
+
 #include "index.hpp"
 #include "kernels.cu"
+#include "errCheck.hpp"
 using namespace cv;
 using namespace std;
 
@@ -70,28 +76,29 @@ int main(int argc, char** argv )
 
     float* d_img;
     nElem = CHN*nrow*ncol;
-    cudaMalloc((void**)&d_img, nElem*sizeof(float));
+    CUDA_CHECK( cudaMalloc((void**)&d_img, nElem*sizeof(float)) );
 
     float* d_imgR;
     nElem = CHN*nFilter*nrow*ncol;
-    cudaMalloc((void**)&d_imgR, nElem*sizeof(float));
-
+    CUDA_CHECK( cudaMalloc((void**)&d_imgR, nElem*sizeof(float)) );
+    
+   
     float* d_filter[CHN];
     nElem = ROW_F*COL_F;
     
     for (int i=0;i<CHN;i++){
-        cudaMalloc((void**)&d_filter[i], nElem*sizeof(float));
+        CUDA_CHECK( cudaMalloc((void**)&d_filter[i], nElem*sizeof(float)) );
     }
 
     for (int c=0;c<2;c++){
         int size = nrow*ncol;
         int offset = c*size;
-        cudaMemcpy(&d_img[offset], &h_img[offset], size*sizeof(float), cudaMemcpyHostToDevice);
+        CUDA_CHECK( cudaMemcpy(&d_img[offset], &h_img[offset], size*sizeof(float), cudaMemcpyHostToDevice) );
 
         for (int f=0;f<nFilter;f++){
             size = ROW_F*COL_F;
             offset = (c*nFilter+f)*size;
-            cudaMemcpy(d_filter[c], &h_filter[offset], size*sizeof(float), cudaMemcpyHostToDevice);
+            CUDA_CHECK( cudaMemcpy(d_filter[c], &h_filter[offset], size*sizeof(float), cudaMemcpyHostToDevice) );
 
             int const bx=32, by=32;
             int const gx=ncol/bx+1, gy=nrow/by+1;
@@ -99,6 +106,8 @@ int main(int argc, char** argv )
             dim3 grid (gx,gy);
             offset = (c*nFilter+f)*ncol*nrow;
             convl<<<block, grid>>>(nrow, ncol, d_filter[c], &d_img[c*nrow*ncol], &d_imgR[offset]);
+            cudaError_t err = cudaGetLastError();
+            checkKernelLaunch(&err);
         }
     }
 
@@ -117,6 +126,7 @@ int main(int argc, char** argv )
 
 */
 
+/*
     nElem = CHN*nFilter*nrow*ncol;
     float* imageR;
     imageR = new float[nElem];
@@ -161,7 +171,6 @@ int main(int argc, char** argv )
     }
 
 
-/*
     for (int c=0; c<CHN; c++){
         for (int i=0; i<nrow; i++){
             for (int j=0; j<ncol; j++){

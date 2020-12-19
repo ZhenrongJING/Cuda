@@ -98,6 +98,7 @@ CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_photo.so.4.5.1
 CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_stitching.so.4.5.1
 CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_video.so.4.5.1
 CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_videoio.so.4.5.1
+CMakeFiles/conv.dir/cmake_device_link.o: liberrCheck.a
 CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_dnn.so.4.5.1
 CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_imgcodecs.so.4.5.1
 CMakeFiles/conv.dir/cmake_device_link.o: /usr/local/lib/libopencv_calib3d.so.4.5.1
@@ -131,6 +132,7 @@ conv: /usr/local/lib/libopencv_photo.so.4.5.1
 conv: /usr/local/lib/libopencv_stitching.so.4.5.1
 conv: /usr/local/lib/libopencv_video.so.4.5.1
 conv: /usr/local/lib/libopencv_videoio.so.4.5.1
+conv: liberrCheck.a
 conv: /usr/local/lib/libopencv_dnn.so.4.5.1
 conv: /usr/local/lib/libopencv_imgcodecs.so.4.5.1
 conv: /usr/local/lib/libopencv_calib3d.so.4.5.1

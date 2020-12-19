@@ -3,6 +3,7 @@
 
 CMakeFiles/conv.dir/convolution.cu.o
  /home/zjing/Documents/cuda/convolution/convolution.cu
+ /home/zjing/Documents/cuda/convolution/errCheck.hpp
  /home/zjing/Documents/cuda/convolution/index.hpp
  /home/zjing/Documents/cuda/convolution/kernels.cu
  /usr/local/include/opencv4/opencv2/calib3d.hpp

@@ -60,10 +60,47 @@ CMAKE_SOURCE_DIR = /home/zjing/Documents/cuda/convolution
 CMAKE_BINARY_DIR = /home/zjing/Documents/cuda/convolution/build
 
 #=============================================================================
+# Target rules for target CMakeFiles/errCheck.dir
+
+# All Build rule for target.
+CMakeFiles/errCheck.dir/all:
+	$(MAKE) -f CMakeFiles/errCheck.dir/build.make CMakeFiles/errCheck.dir/depend
+	$(MAKE) -f CMakeFiles/errCheck.dir/build.make CMakeFiles/errCheck.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zjing/Documents/cuda/convolution/build/CMakeFiles --progress-num=4,5 "Built target errCheck"
+.PHONY : CMakeFiles/errCheck.dir/all
+
+# Include target in all.
+all: CMakeFiles/errCheck.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/errCheck.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zjing/Documents/cuda/convolution/build/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/errCheck.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zjing/Documents/cuda/convolution/build/CMakeFiles 0
+.PHONY : CMakeFiles/errCheck.dir/rule
+
+# Convenience name for target.
+errCheck: CMakeFiles/errCheck.dir/rule
+
+.PHONY : errCheck
+
+# clean rule for target.
+CMakeFiles/errCheck.dir/clean:
+	$(MAKE) -f CMakeFiles/errCheck.dir/build.make CMakeFiles/errCheck.dir/clean
+.PHONY : CMakeFiles/errCheck.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/errCheck.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/conv.dir
 
 # All Build rule for target.
-CMakeFiles/conv.dir/all:
+CMakeFiles/conv.dir/all: CMakeFiles/errCheck.dir/all
 	$(MAKE) -f CMakeFiles/conv.dir/build.make CMakeFiles/conv.dir/depend
 	$(MAKE) -f CMakeFiles/conv.dir/build.make CMakeFiles/conv.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zjing/Documents/cuda/convolution/build/CMakeFiles --progress-num=1,2,3 "Built target conv"
@@ -76,7 +113,7 @@ all: CMakeFiles/conv.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/conv.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zjing/Documents/cuda/convolution/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zjing/Documents/cuda/convolution/build/CMakeFiles 5
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/conv.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/zjing/Documents/cuda/convolution/build/CMakeFiles 0
 .PHONY : CMakeFiles/conv.dir/rule

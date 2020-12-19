@@ -1,3 +1,4 @@
 /home/zjing/Documents/cuda/convolution/build/CMakeFiles/rebuild_cache.dir
-/home/zjing/Documents/cuda/convolution/build/CMakeFiles/conv.dir
 /home/zjing/Documents/cuda/convolution/build/CMakeFiles/edit_cache.dir
+/home/zjing/Documents/cuda/convolution/build/CMakeFiles/errCheck.dir
+/home/zjing/Documents/cuda/convolution/build/CMakeFiles/conv.dir

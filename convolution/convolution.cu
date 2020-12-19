@@ -126,7 +126,6 @@ int main(int argc, char** argv )
 
 */
 
-/*
     nElem = CHN*nFilter*nrow*ncol;
     float* imageR;
     imageR = new float[nElem];
@@ -170,7 +169,7 @@ int main(int argc, char** argv )
     }
     }
 
-
+/*
     for (int c=0; c<CHN; c++){
         for (int i=0; i<nrow; i++){
             for (int j=0; j<ncol; j++){

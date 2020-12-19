@@ -10,14 +10,10 @@ __global__ void convl(int const colR, int const rowR, float const* filter, float
         imgR[np] = 0.0f;
         for(int ii=0; ii<ROW_F; ii++){
             for(int jj=0; jj<COL_F; jj++){
-                int id = (i-ROW_F/2 +ii)*colR + (j-COL_F/2+jj); 
-                float tmp;
-                if (id<0 ||id>colR*rowR-1){
-                    tmp = 0.0f;
-                }else{
-                    tmp = img[id];
-                }
-                imgR[np] += filter[ii*COL_F+jj]*tmp;
+
+                int id = i*colR + j; 
+                imgR[np] += img[id];
+
             }
         }
     }

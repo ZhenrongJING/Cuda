@@ -83,7 +83,7 @@ int main(int argc, char** argv )
         cudaMalloc((void**)&d_filter[i], nElem*sizeof(float));
     }
 
-    for (int c=0;c<CHN;c++){
+    for (int c=0;c<2;c++){
         int size = nrow*ncol;
         int offset = c*size;
         cudaMemcpy(&d_img[offset], &h_img[offset], size*sizeof(float), cudaMemcpyHostToDevice);
@@ -129,7 +129,7 @@ int main(int argc, char** argv )
                     for(int ii=0; ii<ROW_F; ii++){
                         for(int jj=0; jj<COL_F; jj++){
 
-                            int id = (i-ROW_F/2 +ii)*ncol + (j-COL_F/2+jj); 
+                            int id = i*ncol + j;
                             float tmp;
                             if (id<0 ||id>ncol*nrow-1){
                                 tmp = 0.0f;
@@ -138,8 +138,8 @@ int main(int argc, char** argv )
                                 tmp = h_img[id];
                             }
 
-                            imageR[idx(CHN,nFilter,nrow,ncol,c,n,i,j)] += 
-                                tmp*h_filter[idx(CHN,nFilter,ROW_F,COL_F,c,n,ii,jj)];
+                            imageR[idx(CHN,nFilter,nrow,ncol,c,n,i,j)] = 
+                                tmp;
 
                         }
                     }

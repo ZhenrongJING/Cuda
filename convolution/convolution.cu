@@ -83,22 +83,22 @@ int main(int argc, char** argv )
         cudaMalloc((void**)&d_filter[i], nElem*sizeof(float));
     }
 
-    for (int n=0;n<CHN;n++){
+    for (int c=0;c<CHN;c++){
         int size = nrow*ncol;
-        int offset = n*size;
+        int offset = c*size;
         cudaMemcpy(&d_img[offset], &h_img[offset], size*sizeof(float), cudaMemcpyHostToDevice);
 
         for (int f=0;f<nFilter;f++){
             size = ROW_F*COL_F;
-            offset = (n*nFilter+f)*size;
-            cudaMemcpy(d_filter[n], &h_filter[offset], size*sizeof(float), cudaMemcpyHostToDevice);
+            offset = (c*nFilter+f)*size;
+            cudaMemcpy(d_filter[c], &h_filter[offset], size*sizeof(float), cudaMemcpyHostToDevice);
 
             int const bx=32, by=32;
             int const gx=ncol/bx+1, gy=nrow/by+1;
             dim3 block(bx,by);
             dim3 grid (gx,gy);
-            offset = (n*nFilter+f)*ncol*nrow;
-            convl<<<block, grid>>>(nrow, ncol, d_filter[n], &d_img[n*nrow*ncol], &d_imgR[offset]);
+            offset = (c*nFilter+f)*ncol*nrow;
+            convl<<<block, grid>>>(nrow, ncol, d_filter[c], &d_img[c*nrow*ncol], &d_imgR[offset]);
         }
     }
 
@@ -131,7 +131,7 @@ int main(int argc, char** argv )
 
                             int id = (i-ROW_F/2 +ii)*ncol + (j-COL_F/2+jj); 
                             float tmp;
-                            if (id<0 ||id>ncol*nrow){
+                            if (id<0 ||id>ncol*nrow-1){
                                 tmp = 0.0f;
                             }else{
                                 id += c*nrow*ncol;

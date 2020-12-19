@@ -12,7 +12,7 @@ __global__ void convl(int const colR, int const rowR, float const* filter, float
             for(int jj=0; jj<COL_F; jj++){
                 int id = (i-ROW_F/2 +ii)*colR + (j-COL_F/2+jj); 
                 float tmp;
-                if (id<0 ||id>colR*rowR){
+                if (id<0 ||id>colR*rowR-1){
                     tmp = 0.0f;
                 }else{
                     tmp = img[id];

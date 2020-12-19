@@ -126,30 +126,21 @@ int main(int argc, char** argv )
             for (int i=0; i<nrow; i++){
                 for (int j=0; j<ncol; j++){
                     imageR[idx(CHN,nFilter,nrow,ncol,c,n,i,j)] = 0.0;
-                    for(int ii=0; ii<ROW_F; ii++){
-                        for(int jj=0; jj<COL_F; jj++){
 
-                            int id = i*ncol + j;
-                            float tmp;
-                            if (id<0 ||id>ncol*nrow-1){
-                                tmp = 0.0f;
-                            }else{
-                                id += c*nrow*ncol;
-                                tmp = h_img[id];
-                            }
-
-                            imageR[idx(CHN,nFilter,nrow,ncol,c,n,i,j)] = 
-                                tmp;
-
-                        }
+                    int id = i*ncol + j;
+                    float tmp;
+                    if (id<0 ||id>ncol*nrow-1){
+                        tmp = 0.0f;
+                    }else{
+                        id += c*nrow*ncol;
+                        tmp = h_img[id];
                     }
-
+                    imageR[idx(CHN,nFilter,nrow,ncol,c,n,i,j)] = tmp;
                 }
             }
         }
     }
 
-    cudaDeviceSynchronize();
     float* test;
     nElem = CHN*nFilter*nrow*ncol;
     test = new float[nElem];

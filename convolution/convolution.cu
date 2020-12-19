@@ -68,7 +68,6 @@ int main(int argc, char** argv )
         }
     }
 
-/*
     float* d_img;
     nElem = CHN*nrow*ncol;
     cudaMalloc((void**)&d_img, nElem*sizeof(float));
@@ -103,6 +102,7 @@ int main(int argc, char** argv )
         }
     }
 
+/*
     float* test;
     nElem = CHN*nrow*ncol;
     test = new float[nElem];
@@ -149,13 +149,16 @@ int main(int argc, char** argv )
         }
     }
 
+    float* test;
+    nElem = CHN*nFilter*nrow*ncol;
+    test = new float[nElem];
+    cudaMemcpy(test, d_imgR, nElem*sizeof(float), cudaMemcpyDeviceToHost);
 
-/*
-    for (int n=0; n<nFilter; n++){
     for (int c=0; c<CHN; c++){
+    for (int n=0; n<nFilter; n++){
         for (int i=0; i<nrow; i++){
             for (int j=0; j<ncol; j++){
-                int np = idx(nFilter, CHN, nrow, ncol, n, c, i, j);
+                int np = idx(CHN, nFilter, nrow, ncol, c, n, i, j);
                 if ( abs(test[np] - imageR[np]) > 0.001 ) {
                     cout << n << ' ' << c << ' ' << i << ' ' << j << ' ' << test[np] << ' ' << imageR[np] << endl;
                     exit(0);
@@ -165,8 +168,8 @@ int main(int argc, char** argv )
     }
     }
 
-*/
 
+/*
     for (int c=0; c<CHN; c++){
         for (int i=0; i<nrow; i++){
             for (int j=0; j<ncol; j++){
@@ -177,6 +180,7 @@ int main(int argc, char** argv )
     namedWindow("Display Image", WINDOW_AUTOSIZE );
     imshow("Display Image", imageFloat);
     waitKey(0);
+*/
 
     return 0;
 }

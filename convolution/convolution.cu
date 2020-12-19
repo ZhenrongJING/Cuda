@@ -149,6 +149,7 @@ int main(int argc, char** argv )
         }
     }
 
+    cudaDeviceSynchronize();
     float* test;
     nElem = CHN*nFilter*nrow*ncol;
     test = new float[nElem];

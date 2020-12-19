@@ -90,7 +90,7 @@ int main(int argc, char** argv )
         CUDA_CHECK( cudaMalloc((void**)&d_filter[i], nElem*sizeof(float)) );
     }
 
-    for (int c=0;c<2;c++){
+    for (int c=0;c<CHN;c++){
         int size = nrow*ncol;
         int offset = c*size;
         CUDA_CHECK( cudaMemcpy(&d_img[offset], &h_img[offset], size*sizeof(float), cudaMemcpyHostToDevice) );
@@ -135,16 +135,25 @@ int main(int argc, char** argv )
             for (int i=0; i<nrow; i++){
                 for (int j=0; j<ncol; j++){
                     imageR[idx(CHN,nFilter,nrow,ncol,c,n,i,j)] = 0.0;
+                    for(int ii=0; ii<ROW_F; ii++){
+                        int ix = i-ROW_F/2+ii;
+                        for(int jj=0; jj<COL_F; jj++){
+                            int iy = j-COL_F/2+jj;
+                            float tmp;
+                            if (ix<0 || ix>=nrow || iy< 0 || iy>=ncol){
+                                tmp = 0.0f;
+                            }else{
+                                int id = ix*ncol+iy;
+                                id += c*nrow*ncol;
+                                tmp = h_img[id];
+                            }
 
-                    int id = i*ncol + j;
-                    float tmp;
-                    if (id<0 ||id>ncol*nrow-1){
-                        tmp = 0.0f;
-                    }else{
-                        id += c*nrow*ncol;
-                        tmp = h_img[id];
+                            imageR[idx(CHN,nFilter,nrow,ncol,c,n,i,j)] += 
+                                tmp*h_filter[idx(CHN,nFilter,ROW_F,COL_F,c,n,ii,jj)];
+
+                        }
                     }
-                    imageR[idx(CHN,nFilter,nrow,ncol,c,n,i,j)] = tmp;
+
                 }
             }
         }
@@ -161,7 +170,7 @@ int main(int argc, char** argv )
             for (int j=0; j<ncol; j++){
                 int np = idx(CHN, nFilter, nrow, ncol, c, n, i, j);
                 if ( abs(test[np] - imageR[np]) > 0.001 ) {
-                    cout << n << ' ' << c << ' ' << i << ' ' << j << ' ' << test[np] << ' ' << imageR[np] << endl;
+                    cout << c << ' ' << n << ' ' << i << ' ' << j << ' ' << test[np] << ' ' << imageR[np] << endl;
                     exit(0);
                 };
             }

@@ -59,7 +59,7 @@ int main(int argc, char** argv )
     }
 
     int nElem;
-    int const nFilter=2;
+    int const nFilter=5;
     nElem = CHN*nFilter*ROW_F*COL_F;
     float *h_filter;
     h_filter = new float[nElem];
@@ -68,7 +68,7 @@ int main(int argc, char** argv )
         for (int n=0; n<nFilter; n++){
             for (int i=0; i<ROW_F; i++){
                 for (int j=0; j<COL_F; j++){
-                    h_filter[idx(CHN,nFilter,ROW_F,COL_F,c,n,i,j)] = rand()/(RAND_MAX+0.f); 
+                    h_filter[idx(CHN,nFilter,ROW_F,COL_F,c,n,i,j)] = n*0.1f + rand()/(RAND_MAX+0.f); 
                 }
             } 
         }
@@ -112,18 +112,6 @@ int main(int argc, char** argv )
     }
 
 /*
-    float* test;
-    nElem = CHN*nrow*ncol;
-    test = new float[nElem];
-    cudaMemcpy(test, d_img, nElem*sizeof(float), cudaMemcpyDeviceToHost);
-
-    for (int i=0; i<nElem; i++){
-        if ( abs(test[i] - h_img[i]) > 0.0001f ) {
-            cout << i << ' ' << test[i] << ' ' << h_img[i] << endl;
-            exit(0);
-        }
-    }
-
 */
 
     nElem = CHN*nFilter*nrow*ncol;
@@ -147,10 +135,8 @@ int main(int argc, char** argv )
                                 id += c*nrow*ncol;
                                 tmp = h_img[id];
                             }
-
                             imageR[idx(CHN,nFilter,nrow,ncol,c,n,i,j)] += 
                                 tmp*h_filter[idx(CHN,nFilter,ROW_F,COL_F,c,n,ii,jj)];
-
                         }
                     }
 
@@ -189,8 +175,18 @@ int main(int argc, char** argv )
     namedWindow("Display Image", WINDOW_AUTOSIZE );
     imshow("Display Image", imageFloat);
     waitKey(0);
-*/
 
+    for (int c=0; c<CHN; c++){
+        for (int i=0; i<nrow; i++){
+            for (int j=0; j<ncol; j++){
+                imageFloat.at<Vec3f>(i,j)[c] = imageR[idx(CHN,nFilter,nrow,ncol,c,4,i,j)]/20.;
+            }
+        }
+    }
+
+    namedWindow("Display Image", WINDOW_AUTOSIZE );
+    imshow("Display Image", imageFloat);
+    waitKey(0);
+*/
     return 0;
 }
-

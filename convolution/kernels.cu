@@ -1,23 +1,25 @@
-__constant__ float filter[COL_F][ROW_F];
+//__constant__ float filter[CHN][COL_F][ROW_F];
 
-__global__ void padding(int const nchl, int const nrow, int const ncol,int const npad,
-        float* img, float* imgPad){
+__global__ void convl(int const colR, int const rowR, float const* filter, float const* img, float* imgR){
 
-    int i = blockIdx.x*blockDim.x+threadIdx.x;
-    int j = blockIdx.y*blockDim.y+threadIdx.y;
-    int const rowP = nrow + 2*npad;
-    int const colP = ncol + 2*npad;
+    int const i= blockDim.y*blockIdx.y + threadIdx.y;
+    int const j= blockDim.x*blockIdx.x + threadIdx.x;
 
-    if ( (i<ncol+2*npad) && (j<nrow+2*npad) ){
-    for (int n=0; n<nchl; n++){
-        int idxP = idxD(nchl, rowP, colP, n, j, i);
-        if ( (i>npad-1 && i<ncol+npad) && (j>npad-1 && j<nrow+npad) ) {
-            int idxI = idxD(nchl, nrow, ncol, n, j-npad, i-npad);
-            imgPad[idxP] = img[idxI];
-        } else {
-            imgPad[idxP] = 0.f;
+    if (i<rowR && j<colR){
+        int np = i*colR+j;
+        imgR[np] = 0.0f;
+        for(int ii=0; ii<ROW_F; ii++){
+            for(int jj=0; jj<COL_F; jj++){
+                int id = (i-ROW_F/2 +ii)*colR + (j-COL_F/2+jj); 
+                float tmp;
+                if (id<0 ||id>colR*rowR){
+                    tmp = 0.0f;
+                }else{
+                    tmp = img[id];
+                }
+                imgR[np] += filter[ii*COL_F+jj]*tmp;
+            }
         }
     }
-    }
-}
 
+}

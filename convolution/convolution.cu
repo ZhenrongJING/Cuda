@@ -3,8 +3,9 @@
 #include <algorithm>
 #include <opencv2/opencv.hpp>
 
-#define ROW_F 17
-#define COL_F 17
+#define ROW_F 7
+#define COL_F 7
+#define CHN   3
 
 #include "index.hpp"
 #include "kernels.cu"
@@ -36,14 +37,13 @@ int main(int argc, char** argv )
 
     int const nrow = imageFloat.rows;
     int const ncol = imageFloat.cols;
-    int const nchl = imageFloat.channels();
-    printf( " size of the image %d times  %d times  %d\n", nchl, nrow, ncol);
+    printf( " size of the image %d times  %d times  %d\n", CHN, nrow, ncol);
 
     float *h_img;
-    h_img = new float[nchl*nrow*ncol];
+    h_img = new float[CHN*nrow*ncol];
 
     int np = 0;
-    for (int c=0; c<nchl; c++){
+    for (int c=0; c<CHN; c++){
         for (int i=0; i<nrow; i++){
             for (int j=0; j<ncol; j++){
                 np = c*(nrow*ncol)+i*ncol+j;
@@ -54,39 +54,57 @@ int main(int argc, char** argv )
 
     int nElem;
     int const nFilter=2;
-    nElem = nFilter*nchl*ROW_F*COL_F;
+    nElem = CHN*nFilter*ROW_F*COL_F;
     float *h_filter;
     h_filter = new float[nElem];
 
-    for (int n=0; n<nFilter; n++){
-        for(int c=0; c<nchl; c++){
+    for(int c=0; c<CHN; c++){
+        for (int n=0; n<nFilter; n++){
             for (int i=0; i<ROW_F; i++){
                 for (int j=0; j<COL_F; j++){
-                    h_filter[idx(nFilter,nchl,ROW_F,COL_F,n,c,i,j)] = rand()/(RAND_MAX+0.f); 
+                    h_filter[idx(CHN,nFilter,ROW_F,COL_F,c,n,i,j)] = rand()/(RAND_MAX+0.f); 
                 }
             } 
         }
     }
 
+/*
     float* d_img;
-    nElem = nchl*nrow*ncol;
+    nElem = CHN*nrow*ncol;
     cudaMalloc((void**)&d_img, nElem*sizeof(float));
 
-    float* d_filter;
-    nElem = nFilter*nchl*ROW_F*COL_F;
-    cudaMalloc((void**)&d_filter, nElem*sizeof(float));
-
     float* d_imgR;
-    nElem = nFilter*nchl*nrow*ncol;
+    nElem = CHN*nFilter*nrow*ncol;
     cudaMalloc((void**)&d_imgR, nElem*sizeof(float));
 
-    for (int n=0;n<nchl;n++){
-        int stride = n*nrow*ncol;
-        cudaMemcpy(d_img+stride, h_img+stride, (nrow*ncol)*sizeof(float), cudaMemcpyHostToDevice);
+    float* d_filter[CHN];
+    nElem = ROW_F*COL_F;
+    
+    for (int i=0;i<CHN;i++){
+        cudaMalloc((void**)&d_filter[i], nElem*sizeof(float));
+    }
+
+    for (int n=0;n<CHN;n++){
+        int size = nrow*ncol;
+        int offset = n*size;
+        cudaMemcpy(&d_img[offset], &h_img[offset], size*sizeof(float), cudaMemcpyHostToDevice);
+
+        for (int f=0;f<nFilter;f++){
+            size = ROW_F*COL_F;
+            offset = (n*nFilter+f)*size;
+            cudaMemcpy(d_filter[n], &h_filter[offset], size*sizeof(float), cudaMemcpyHostToDevice);
+
+            int const bx=32, by=32;
+            int const gx=ncol/bx+1, gy=nrow/by+1;
+            dim3 block(bx,by);
+            dim3 grid (gx,gy);
+            offset = (n*nFilter+f)*ncol*nrow;
+            convl<<<block, grid>>>(nrow, ncol, d_filter[n], &d_img[n*nrow*ncol], &d_imgR[offset]);
+        }
     }
 
     float* test;
-    nElem = nchl*nrow*ncol;
+    nElem = CHN*nrow*ncol;
     test = new float[nElem];
     cudaMemcpy(test, d_img, nElem*sizeof(float), cudaMemcpyDeviceToHost);
 
@@ -97,28 +115,32 @@ int main(int argc, char** argv )
         }
     }
 
+*/
 
-/*
-
-    gridX = colR/32 + 1;
-    gridY = rowR/32 + 1;
-    dim3 grid1(gridX,gridY);
-
-    nElem = nFilter*nchl*rowR*colR;
+    nElem = CHN*nFilter*nrow*ncol;
     float* imageR;
     imageR = new float[nElem];
 
-    for (int n=0; n<nFilter; n++){
-        for(int c=0; c<nchl; c++){
-            for (int i=0; i<rowR; i++){
-                for (int j=0; j<colR; j++){
+    for(int c=0; c<CHN; c++){
+        for (int n=0; n<nFilter; n++){
+            for (int i=0; i<nrow; i++){
+                for (int j=0; j<ncol; j++){
+                    imageR[idx(CHN,nFilter,nrow,ncol,c,n,i,j)] = 0.0;
+                    for(int ii=0; ii<ROW_F; ii++){
+                        for(int jj=0; jj<COL_F; jj++){
 
-                    imageR[idx(nFilter,nchl,rowR,colR,n,c,i,j)] = 0.0;
-                    for(int ii=0; ii<rowF; ii++){
-                        for(int jj=0; jj<colF; jj++){
-                            imageR[idx(nFilter,nchl,rowR,colR,n,c,i,j)] +=
-                                h_filter[idx(nFilter,nchl,rowF,colF,n,c,ii,jj)]
-                                *h_imgPad[idx(nchl, rowP, colP, c, i+ii, j+jj)];
+                            int id = (i-ROW_F/2 +ii)*ncol + (j-COL_F/2+jj); 
+                            float tmp;
+                            if (id<0 ||id>ncol*nrow){
+                                tmp = 0.0f;
+                            }else{
+                                id += c*nrow*ncol;
+                                tmp = h_img[id];
+                            }
+
+                            imageR[idx(CHN,nFilter,nrow,ncol,c,n,i,j)] += 
+                                tmp*h_filter[idx(CHN,nFilter,ROW_F,COL_F,c,n,ii,jj)];
+
                         }
                     }
 
@@ -128,11 +150,12 @@ int main(int argc, char** argv )
     }
 
 
+/*
     for (int n=0; n<nFilter; n++){
-    for (int c=0; c<nchl; c++){
-        for (int i=0; i<rowR; i++){
-            for (int j=0; j<colR; j++){
-                int np = idx(nFilter, nchl, rowR, colR, n, c, i, j);
+    for (int c=0; c<CHN; c++){
+        for (int i=0; i<nrow; i++){
+            for (int j=0; j<ncol; j++){
+                int np = idx(nFilter, CHN, nrow, ncol, n, c, i, j);
                 if ( abs(test[np] - imageR[np]) > 0.001 ) {
                     cout << n << ' ' << c << ' ' << i << ' ' << j << ' ' << test[np] << ' ' << imageR[np] << endl;
                     exit(0);
@@ -142,10 +165,12 @@ int main(int argc, char** argv )
     }
     }
 
-    for (int c=0; c<nchl; c++){
+*/
+
+    for (int c=0; c<CHN; c++){
         for (int i=0; i<nrow; i++){
             for (int j=0; j<ncol; j++){
-                imageFloat.at<Vec3f>(i,j)[c] = imageR[idx(nFilter,nchl,rowR,colR,0,c,i,j)]/250.;
+                imageFloat.at<Vec3f>(i,j)[c] = imageR[idx(CHN,nFilter,nrow,ncol,c,0,i,j)]/20.;
             }
         }
     }
@@ -153,7 +178,6 @@ int main(int argc, char** argv )
     imshow("Display Image", imageFloat);
     waitKey(0);
 
-*/
     return 0;
 }
 
